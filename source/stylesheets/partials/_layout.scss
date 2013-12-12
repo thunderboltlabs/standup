@@ -1,0 +1,8 @@
+.avatars {
+  @include block-grid(2);
+  @media #{$small} { @include block-grid(3); }
+  @media #{$medium} { @include block-grid(4); }
+  @media #{$large} { @include block-grid(4); }
+}
+
+.max-row { margin: 0; padding: 0; width: 100%; }

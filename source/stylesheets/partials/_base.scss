@@ -1,0 +1,214 @@
+
+@mixin input-placeholder {
+  &.placeholder { @content; }
+  &:-moz-placeholder { @content; }
+  &::-moz-placeholder { @content; }
+  &:-ms-input-placeholder { @content; }
+  &::-webkit-input-placeholder { @content; }
+}
+
+
+@mixin selection-colors {
+  background: $yellow;
+  color: $black;
+}
+
+::selection { @include selection-colors; }
+::-moz-selection { @include selection-colors; }
+::-webkit-selection { @include selection-colors; }
+
+
+$colors: (yellow $yellow, red $red, ruby $ruby, green $green, cyan $cyan, teal $teal, blue $blue, orange $orange, purple $purple, lime $lime, brown $brown);
+
+html { height: 100%; }
+
+
+body {
+  background: $white;
+  color: $grey;
+  font-family: $base-font-family, sans-serif;
+  font-weight: $base-font-weight;
+  min-height: 100%;
+  overflow: hidden;
+}
+
+
+%off {
+  .name {
+    color: $red;
+    text-decoration: line-through;
+  }
+}
+
+%avatar-image {
+  @include border-radius(1000px);
+  overflow: hidden;
+  width: 42px;
+  border-width: 3px;
+  border-style: solid;
+  @each $color in $colors {
+    &[data-color=#{nth($color, 1)}] { border-color: #{nth($color, 2)}; }
+  }
+}
+.avatar {
+  text-align: center;
+  font-size: emCalc(15);
+  cursor: pointer;
+
+
+  &.off,
+  &[data-state="0"] {
+    @extend %off;
+    opacity: .2;
+  }
+
+  .circle, .name {
+    display: block;
+    margin: 0 auto;
+  }
+  .circle { @extend %avatar-image; }
+
+  &:hover { @extend %off; }
+
+  @media #{$small} {
+    text-align: left;
+    font-size: emCalc(18);
+    .circle, .name { @include inline-block; }
+    .circle { border-width: 4px; width: 62px; margin: 0; }
+    .name { margin-left: 10px; }
+  }
+}
+
+#chat {
+  @include box-shadow(0 1px 3px 1px rgba($black, .1));
+  overflow: hidden;
+  position: relative;
+}
+
+#messages-wrapper {
+  @include box-shadow(0 1px 0 0 rgba($grey, .1));
+  background: white;
+  font-size: emCalc(14);
+  overflow: auto;
+  height: 200px;
+  max-height: 400px;
+  position: relative;
+  z-index: 1;
+  resize: vertical;
+  .circle { resize: none; }
+}
+
+.break-all { word-break: break-word; }
+$link-color: $yellow;
+$link-hover-color: $ruby;
+#messages {
+  z-index: 1;
+  width: 100%;
+  margin: 0;
+  a { color: black; background: $link-color; }
+  a:hover {
+    background: $link-hover-color;
+    > span,
+    > i { color: white !important; }
+  }
+  li {
+    span:not(.name) { @include inline-block; line-height: 1.6em; }
+    span.name {
+      font-size: emCalc(12);
+      font-weight: 300;
+      text-transform: uppercase;
+      margin-right: 5px;
+      margin-top: -2px;
+      vertical-align: middle;
+    }
+    p {
+      margin: 6px 0 10px 0;
+
+      [class^="icon-"] {
+        color: $black; margin-left: 5px;
+        + span { color: $black; margin-right: 5px; }
+
+      }
+      i[class^="icon-"] {
+        font-size: .8em;
+        margin-right: 4px;
+      }
+      a[class^="icon-"] {
+        @include inline-block;
+        @include box-shadow(0 0 0 3px $yellow);
+        position: relative;
+        vertical-align: top;
+        &:hover {
+          @include box-shadow(0 0 0 3px $link-hover-color);
+          &:before { color: white; background: $link-hover-color; }
+        }
+      }
+      a[class^="icon-"]:before {
+        @include box-shadow(2px 2px 0 0 rgba(0,0,0,.3));
+        background: $link-color;
+        position: absolute;
+        vertical-align: top;
+        padding: 5px;
+        top: 2px;
+        left: -6px;
+      }
+      .thumb { max-height: 150px; }
+    }
+    .circle {
+      @extend %avatar-image;
+      width: 32px;
+      float: left;
+      margin-right: 10px;
+    }
+    @include box-shadow(0 1px 0 0 rgba($grey, .2));
+    padding: 10px;
+    @each $color in $colors {
+      &.#{nth($color, 1)} {
+        span.name { color: #{nth($color, 2)}; }
+      }
+    }
+  }
+}
+.input-wrapper {
+  @include transition(all .4s);
+  background: white;
+  padding: 10px 15px 9px;
+  &.focus { background: darken(#fff, 2%); }
+}
+#message {
+  @include border-radius(none);
+  @include transition(all .4s);
+  @include box-shadow(none);
+  @include input-placeholder {
+    color: rgba($grey, .5);
+    font-style: italic;
+  };
+  font-size: emCalc(14);
+  border: none;
+  margin: 0;
+  position: relative;
+  z-index: 0;
+  resize: none;
+}
+button.prefix {
+  @include box-shadow(none);
+  display: none;
+  background: $green;
+  font-size: 1em;
+  border: none;
+  margin: 0;
+}
+
+button, .button {
+  &.secondary{ color: $grey; }
+  &.login { margin: 20px }
+}
+
+* { outline: 0; }
+button::-moz-focus-inner { border: 0; }
+
+pre {
+  background: rgba($grey, .2);
+  font-weight: normal;
+  font-size: emCalc(14);
+}
